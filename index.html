@@ -1,0 +1,209 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html lang="en" class="scroll-smooth">\
+<head>\
+    <meta charset="UTF-8">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <title>Kortex Labs - Get Your Custom AI Blueprint</title>\
+    <script src="https://cdn.tailwindcss.com"></script>\
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>\
+    <link rel="preconnect" href="https://fonts.googleapis.com">\
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">\
+    <style>\
+        /* Kortex Labs Branding & Styles */\
+        body \{\
+            font-family: 'Roboto', sans-serif;\
+            background-color: #0A0A0A;\
+            background-image:\
+                radial-gradient(circle at 10% 20%, rgba(37, 8, 60, 0.5) 0%, rgba(10,10,10,0) 30%),\
+                radial-gradient(circle at 90% 80%, rgba(228, 157, 254, 0.15) 0%, rgba(10,10,10,0) 40%),\
+                linear-gradient(rgba(10, 10, 10, 0.95), rgba(10, 10, 10, 0.95)),\
+                url('https://www.transparenttextures.com/patterns/gplay.png');\
+            background-attachment: fixed;\
+            background-position: center;\
+            color: #E2E8F0;\
+        \}\
+        h1, h2, h3, h4, h5, h6 \{\
+            font-family: 'Montserrat', sans-serif;\
+        \}\
+        .kortex-text-primary \{ color: #e49dfe; \}\
+        .glow-button \{\
+            background-color: #e49dfe;\
+            color: #25083c;\
+            box-shadow: 0 0 20px rgba(228, 157, 254, 0.4), 0 0 5px rgba(228, 157, 254, 0.3);\
+            transition: all 0.3s ease;\
+        \}\
+        .glow-button:hover \{\
+            box-shadow: 0 0 30px rgba(228, 157, 254, 0.6), 0 0 10px rgba(228, 157, 254, 0.4);\
+            transform: scale(1.05);\
+        \}\
+        .info-card \{\
+            border: 1px solid #3c2a4d;\
+            background-color: rgba(37, 8, 60, 0.3);\
+            backdrop-filter: blur(10px);\
+        \}\
+        .form-input, .form-select, .form-textarea \{\
+            background-color: rgba(37, 8, 60, 0.5);\
+            border: 1px solid #3c2a4d;\
+            color: #f2cbff;\
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;\
+        \}\
+        .form-input:focus, .form-select:focus, .form-textarea:focus \{\
+            outline: none;\
+            border-color: #e49dfe;\
+            box-shadow: 0 0 15px rgba(228, 157, 254, 0.2);\
+        \}\
+        .form-input::placeholder, .form-textarea::placeholder \{ color: #a08fb0; \}\
+        .loader \{\
+            border: 4px solid #3c2a4d;\
+            border-top: 4px solid #e49dfe;\
+            border-radius: 50%;\
+            width: 40px;\
+            height: 40px;\
+            animation: spin 1s linear infinite;\
+        \}\
+        @keyframes spin \{ 0% \{ transform: rotate(0deg); \} 100% \{ transform: rotate(360deg); \} \}\
+        [x-cloak] \{ display: none !important; \}\
+    </style>\
+</head>\
+<body class="antialiased">\
+\
+    <header class="container mx-auto px-6 py-6 flex justify-center items-center">\
+        <span class="text-5xl font-black kortex-text-primary">KORTEX</span>\
+    </header>\
+\
+    <main class="container mx-auto px-6">\
+        \
+        <div class="max-w-3xl mx-auto py-8 md:py-16 text-center" \
+            x-data="\{\
+                state: 'form', // 'form', 'loading', 'submitted'\
+                formData: \{\
+                    email: '',\
+                    industry: 'Automotive',\
+                    goal: 'Increase Sales Revenue',\
+                    challenge: ''\
+                \},\
+                error: '',\
+                async submitForm() \{\
+                    if (!this.formData.email || !this.formData.challenge) \{\
+                        this.error = 'Please fill out all required fields.';\
+                        return;\
+                    \}\
+                    this.state = 'loading';\
+                    this.error = '';\
+\
+                    try \{\
+                        // The endpoint for your serverless function\
+                        const endpoint = '/api/generate-blueprint'; \
+                        const response = await fetch(endpoint, \{\
+                            method: 'POST',\
+                            headers: \{ 'Content-Type': 'application/json' \},\
+                            body: JSON.stringify(this.formData)\
+                        \});\
+\
+                        if (!response.ok) \{\
+                            throw new Error('Something went wrong. Please try again.');\
+                        \}\
+                        \
+                        this.state = 'submitted';\
+\
+                    \} catch (e) \{\
+                        this.error = e.message;\
+                        this.state = 'form';\
+                    \}\
+                \}\
+            \}">\
+\
+            <template x-if="state === 'form'">\
+                <div x-transition>\
+                    <h1 class="text-4xl sm:text-5xl font-black text-white leading-tight">Get Your Custom AI Operational Blueprint</h1>\
+                    <p class="mt-4 text-lg text-slate-300">Describe your business challenge, and our AI will generate and email you a strategic blueprint to solve it. This is your first step towards true operational intelligence and your ticket to our exclusive waitlist.</p>\
+                    \
+                    <form @submit.prevent="submitForm" class="info-card p-6 md:p-8 rounded-lg mt-10 text-left">\
+                        <div class="space-y-6">\
+                             <div>\
+                                <label for="email" class="block text-sm font-medium text-slate-300 mb-2">Work Email</label>\
+                                <input type="email" id="email" x-model="formData.email" required class="form-input w-full rounded-md p-3" placeholder="you@company.com">\
+                            </div>\
+                            <div>\
+                                <label for="industry" class="block text-sm font-medium text-slate-300 mb-2">Your Industry</label>\
+                                <select id="industry" x-model="formData.industry" class="form-select w-full rounded-md p-3">\
+                                    <option>Automotive</option>\
+                                    <option>Logistics & Supply Chain</option>\
+                                    <option>Real Estate</option>\
+                                    <option>High-Volume Sales</option>\
+                                    <option>Hospitality</option>\
+                                    <option>E-commerce</option>\
+                                    <option>SaaS</option>\
+                                    <option>Other</option>\
+                                </select>\
+                            </div>\
+                            <div>\
+                                <label for="goal" class="block text-sm font-medium text-slate-300 mb-2">Primary Goal</label>\
+                                <select id="goal" x-model="formData.goal" class="form-select w-full rounded-md p-3">\
+                                    <option>Increase Sales Revenue</option>\
+                                    <option>Reduce Operational Costs</option>\
+                                    <option>Improve Customer Satisfaction</option>\
+                                    <option>Enhance Supply Chain Resilience</option>\
+                                </select>\
+                            </div>\
+                            <div>\
+                                <label for="challenge" class="block text-sm font-medium text-slate-300 mb-2">Biggest Operational Challenge</label>\
+                                <textarea id="challenge" x-model="formData.challenge" rows="3" required class="form-textarea w-full rounded-md p-3" placeholder="e.g., 'Our lead follow-up is too slow and inconsistent.'"></textarea>\
+                            </div>\
+                        </div>\
+                        <div x-show="error" x-cloak class="mt-4 text-center text-red-400" x-text="error"></div>\
+                        <div class="mt-8">\
+                            <button type="submit" class="w-full glow-button font-bold py-4 rounded-lg">Send My AI Blueprint & Join Waitlist</button>\
+                        </div>\
+                    </form>\
+                </div>\
+            </template>\
+\
+            <!-- Loading State -->\
+            <template x-if="state === 'loading'">\
+                <div x-transition>\
+                    <h2 class="text-3xl font-bold text-white">Our AI Strategist is Generating Your Blueprint...</h2>\
+                    <p class="text-slate-400 mt-2">This may take a few moments.</p>\
+                    <div class="flex justify-center mt-12">\
+                        <div class="loader"></div>\
+                    </div>\
+                </div>\
+            </template>\
+\
+            <!-- Thank You / Confirmation State -->\
+            <template x-if="state === 'submitted'">\
+                <div x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100">\
+                     <div class="flex justify-center mb-4">\
+                        <svg class="w-16 h-16 kortex-text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>\
+                    </div>\
+                    <h2 class="text-3xl font-bold text-white">Welcome to the Forefront.</h2>\
+                    <p class="text-slate-300 mt-2">Your custom AI blueprint is on its way to your inbox. You've also secured your spot on the Kortex Labs waitlist.</p>\
+                    <div class="mt-8 text-left info-card p-6 rounded-lg">\
+                         <h3 class="font-bold text-white">What's Next?</h3>\
+                         <p class="text-slate-400 mt-2">While our AI works, here's how you can get ahead:</p>\
+                         <ul class="mt-4 space-y-3">\
+                             <li><a href="#" class="font-semibold kortex-text-primary hover:underline">1. Book a 15-min AI Strategy Call &rarr;</a></li>\
+                             <li><a href="#" class="font-semibold kortex-text-primary hover:underline">2. Join our Private Discord Community &rarr;</a></li>\
+                         </ul>\
+                    </div>\
+                </div>\
+            </template>\
+\
+        </div>\
+    </main>\
+    \
+    <footer class="container mx-auto px-6 py-8 text-center text-slate-500">\
+        <p>&copy; 2025 Kortex Labs, Inc. All rights reserved.</p>\
+    </footer>\
+\
+</body>\
+</html>\
+}
