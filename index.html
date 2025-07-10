@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kortex Labs - Join the Waitlist</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Alpine.js has been removed as it's no longer needed for the form -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
@@ -49,6 +49,12 @@
         .glow-button:hover {
             box-shadow: 0 0 30px rgba(228, 157, 254, 0.6), 0 0 10px rgba(228, 157, 254, 0.4);
             transform: scale(1.05);
+        }
+        .glow-button:disabled {
+            background-color: #a08fb0;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
         }
         .info-card {
             border: 1px solid #3c2a4d;
@@ -94,7 +100,6 @@
             background: rgba(228, 157, 254, 0.1);
             box-shadow: 0 0 30px 15px rgba(228, 157, 254, 0.1);
         }
-        [x-cloak] { display: none !important; }
     </style>
 </head>
 <body class="antialiased">
@@ -141,66 +146,66 @@
                 </div>
             </div>
 
-            <!-- Right Column: Form -->
-            <div class="info-card p-6 md:p-8 rounded-lg" x-data="{ submitted: false }">
-                <template x-if="!submitted">
-                    <form @submit.prevent="submitted = true">
-                        <h2 class="text-2xl font-bold text-white text-center">Join the Waitlist</h2>
-                        <p class="text-center text-slate-400 mb-8">Request your invitation.</p>
-                        
-                        <div class="space-y-6">
-                            <div>
-                                <label for="email" class="block text-sm font-medium text-slate-300 mb-2">Work Email</label>
-                                <input type="email" id="email" required class="form-input w-full rounded-md p-3" placeholder="you@company.com">
-                            </div>
-                            <div>
-                                <label for="company" class="block text-sm font-medium text-slate-300 mb-2">Company Name</label>
-                                <input type="text" id="company" required class="form-input w-full rounded-md p-3" placeholder="Your Company, Inc.">
-                            </div>
-                             <div>
-                                <label for="industry" class="block text-sm font-medium text-slate-300 mb-2">Your Industry</label>
-                                <select id="industry" class="form-select w-full rounded-md p-3">
-                                    <option>Automotive</option>
-                                    <option>Logistics & Supply Chain</option>
-                                    <option>Real Estate</option>
-                                    <option>High-Volume Sales</option>
-                                    <option>Hospitality</option>
-                                    <option>E-commerce</option>
-                                    <option>SaaS</option>
-                                    <option>Other</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="challenge" class="block text-sm font-medium text-slate-300 mb-2">Biggest Operational Challenge</label>
-                                <textarea id="challenge" rows="3" class="form-textarea w-full rounded-md p-3" placeholder="e.g., 'Our lead follow-up is too slow and inconsistent.'"></textarea>
-                            </div>
+            <!-- Right Column: Form Container -->
+            <div id="form-container" class="info-card p-6 md:p-8 rounded-lg">
+                <!-- Form View -->
+                <form id="waitlist-form">
+                    <h2 class="text-2xl font-bold text-white text-center">Join the Waitlist</h2>
+                    <p class="text-center text-slate-400 mb-8">Request your invitation.</p>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-slate-300 mb-2">Work Email</label>
+                            <input type="email" id="email" required class="form-input w-full rounded-md p-3" placeholder="you@company.com">
                         </div>
-
-                        <div class="mt-8">
-                            <button type="submit" class="w-full glow-button font-bold py-4 rounded-lg">
-                                Request Early Access
-                            </button>
+                        <div>
+                            <label for="company" class="block text-sm font-medium text-slate-300 mb-2">Company Name</label>
+                            <input type="text" id="company" required class="form-input w-full rounded-md p-3" placeholder="Your Company, Inc.">
                         </div>
-                    </form>
-                </template>
-                <!-- Thank you state -->
-                <template x-if="submitted">
-                    <div class="text-center">
-                        <div class="flex justify-center mb-4">
-                            <svg class="w-16 h-16 kortex-text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                         <div>
+                            <label for="industry" class="block text-sm font-medium text-slate-300 mb-2">Your Industry</label>
+                            <select id="industry" class="form-select w-full rounded-md p-3">
+                                <option>Automotive</option>
+                                <option>Logistics & Supply Chain</option>
+                                <option>Real Estate</option>
+                                <option>High-Volume Sales</option>
+                                <option>Hospitality</option>
+                                <option>E-commerce</option>
+                                <option>SaaS</option>
+                                <option>Other</option>
+                            </select>
                         </div>
-                        <h2 class="text-2xl font-bold text-white">Welcome to the Forefront.</h2>
-                        <p class="text-slate-300 mt-2">Your request has been received. You'll receive an email shortly with next steps.</p>
-                        <div class="mt-8 text-left p-6 bg-purple-900/40 rounded-lg border border-purple-800">
-                             <h3 class="font-bold text-white">What's Next?</h3>
-                             <p class="text-slate-400 mt-2">To get the most out of your early access, we recommend you:</p>
-                             <ul class="mt-4 space-y-3">
-                                 <li><a href="https://calendly.com/kortexlabsai/discovery-call" target="_blank" rel="noopener noreferrer" class="font-semibold kortex-text-primary hover:underline">1. Book a 15-min AI Strategy Call &rarr;</a></li>
-                                 <li><a href="https://discord.gg/caJhW7He" target="_blank" rel="noopener noreferrer" class="font-semibold kortex-text-primary hover:underline">2. Join our Private Discord Community &rarr;</a></li>
-                             </ul>
+                        <div>
+                            <label for="challenge" class="block text-sm font-medium text-slate-300 mb-2">Biggest Operational Challenge</label>
+                            <textarea id="challenge" rows="3" class="form-textarea w-full rounded-md p-3" placeholder="e.g., 'Our lead follow-up is too slow and inconsistent.'"></textarea>
                         </div>
                     </div>
-                </template>
+
+                    <div id="form-error" class="hidden text-center text-red-400 mt-4"></div>
+
+                    <div class="mt-8">
+                        <button id="submit-button" type="submit" class="w-full glow-button font-bold py-4 rounded-lg">
+                            Request Early Access
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Thank You View (Initially Hidden) -->
+                <div id="thank-you-message" class="hidden text-center">
+                    <div class="flex justify-center mb-4">
+                        <svg class="w-16 h-16 kortex-text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white">Welcome to the Forefront.</h2>
+                    <p class="text-slate-300 mt-2">Your request has been received. You'll receive an email shortly with next steps.</p>
+                    <div class="mt-8 text-left p-6 bg-purple-900/40 rounded-lg border border-purple-800">
+                         <h3 class="font-bold text-white">What's Next?</h3>
+                         <p class="text-slate-400 mt-2">To get the most out of your early access, we recommend you:</p>
+                         <ul class="mt-4 space-y-3">
+                             <li><a href="https://calendly.com/kortexlabsai/discovery-call" target="_blank" rel="noopener noreferrer" class="font-semibold kortex-text-primary hover:underline">1. Book a 15-min AI Strategy Call &rarr;</a></li>
+                             <li><a href="https://discord.gg/caJhW7He" target="_blank" rel="noopener noreferrer" class="font-semibold kortex-text-primary hover:underline">2. Join our Private Discord Community &rarr;</a></li>
+                         </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -210,6 +215,7 @@
     </footer>
 
     <script>
+        // --- Script for custom cursor glow effect ---
         document.addEventListener('DOMContentLoaded', () => {
             const cursorGlow = document.getElementById('cursor-glow');
             if (!cursorGlow) return;
@@ -234,6 +240,71 @@
                     cursorGlow.classList.remove('cursor-grow');
                 });
             });
+        });
+    </script>
+
+    <script>
+        // --- NEW Script for handling form submission with vanilla JavaScript ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get references to the form and its elements
+            const waitlistForm = document.getElementById('waitlist-form');
+            const submitButton = document.getElementById('submit-button');
+            const errorMessage = document.getElementById('form-error');
+            const thankYouMessage = document.getElementById('thank-you-message');
+
+            // Ensure the form element exists before adding an event listener
+            if (waitlistForm) {
+                waitlistForm.addEventListener('submit', async (event) => {
+                    // Prevent the default browser form submission
+                    event.preventDefault();
+
+                    // --- UI: Show loading state ---
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Submitting...';
+                    errorMessage.classList.add('hidden');
+                    errorMessage.textContent = '';
+
+                    // --- Data: Get form values ---
+                    const formData = {
+                        email: document.getElementById('email').value,
+                        company: document.getElementById('company').value,
+                        industry: document.getElementById('industry').value,
+                        challenge: document.getElementById('challenge').value,
+                    };
+
+                    try {
+                        // --- API Call: Send data to the backend ---
+                        // This is where you would call your Vercel function.
+                        // Replace '/api/join-waitlist' with your actual API endpoint.
+                        const response = await fetch('/api/join-waitlist', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(formData),
+                        });
+
+                        // Check if the request was successful
+                        if (!response.ok) {
+                            // If the server returns an error, try to parse it
+                            const errorData = await response.json().catch(() => ({ message: 'An unknown error occurred.' }));
+                            throw new Error(errorData.message || `Server responded with status ${response.status}`);
+                        }
+
+                        // --- UI: Show success state ---
+                        waitlistForm.classList.add('hidden');
+                        thankYouMessage.classList.remove('hidden');
+
+                    } catch (error) {
+                        // --- UI: Show error state ---
+                        console.error('Submission failed:', error);
+                        errorMessage.textContent = `Submission failed. ${error.message}. Please try again.`;
+                        errorMessage.classList.remove('hidden');
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Request Early Access';
+                    }
+                });
+            }
         });
     </script>
 </body>
