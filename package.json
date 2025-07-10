@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Backend for Kortex AI Blueprint funnel",
   "main": "api/generate-blueprint.js",
+  "type": "module",
   "dependencies": {
-    "node-fetch": "^2.6.7",
-    "@sendgrid/mail": "^8.1.0"
+    "@sendgrid/mail": "^8.1.3",
+    "node-fetch": "^3.3.2"
   }
 }

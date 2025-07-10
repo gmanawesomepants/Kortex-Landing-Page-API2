@@ -1,15 +1,13 @@
 // This is a Node.js serverless function for Vercel.
 // File path should be: /api/generate-blueprint.js
 
-// Using 'import' syntax for modern ES Modules, which is standard on Vercel.
 import fetch from 'node-fetch';
 import sgMail from '@sendgrid/mail';
 
 // Set API keys from environment variables for security.
-// In Vercel, these are set in the project's Environment Variables settings.
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const SENDER_EMAIL = process.env.SENDER_EMAIL; // Your verified SendGrid sender email
+const SENDER_EMAIL = process.env.SENDER_EMAIL;
 
 /**
  * Formats the raw JSON blueprint from Gemini into a beautiful, on-brand HTML email.
@@ -71,20 +69,17 @@ function formatBlueprintEmail(blueprint) {
 // This is the main serverless function handler for Vercel
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
+        res.setHeader('Allow', ['POST']);
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
     try {
-        // **FIX 1: Changed `goal` to `company` to match the frontend form data.**
         const { email, company, industry, challenge } = req.body;
 
-        // The validation now correctly checks for `company`.
         if (!email || !company || !industry || !challenge) {
-            // Updated the error message to be more specific.
             return res.status(400).json({ message: 'Missing required fields. All fields are mandatory.' });
         }
 
-        // **FIX 2: Updated the prompt to use the `company` and `challenge` variables correctly.**
         const prompt = `You are a visionary AI strategist for Kortex Labs. A potential client, ${company}, which is in the ${industry} industry, has submitted a request. Their primary operational challenge is: '${challenge}'. Generate a high-level, 3-step 'AI Blueprint' to solve this challenge using the Kortex Labs methodology: 1. Ingest & Unify, 2. Analyze & Predict, 3. Execute & Automate. For each step, provide a concise description and suggest a specific type of Kortex AI Agent that would be used. Finally, provide a compelling summary of the potential impact for ${company}. Your response MUST be in the specified JSON format.`;
 
         const payload = {
@@ -102,7 +97,7 @@ export default async function handler(req, res) {
             }
         };
 
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
         const geminiResponse = await fetch(geminiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -110,30 +105,36 @@ export default async function handler(req, res) {
         });
 
         if (!geminiResponse.ok) {
-            console.error("Gemini API Error:", await geminiResponse.text());
+            const errorBody = await geminiResponse.text();
+            console.error("Gemini API Error:", geminiResponse.status, errorBody);
             throw new Error('Failed to generate blueprint from AI.');
         }
 
         const geminiResult = await geminiResponse.json();
-        const blueprint = JSON.parse(geminiResult.candidates[0].content.parts[0].text);
+        const blueprintText = geminiResult.candidates?.[0]?.content?.parts?.[0]?.text;
 
-        // --- Step 2: Format and Send Email with SendGrid ---
+        if (!blueprintText) {
+             console.error("Invalid response structure from Gemini API:", geminiResult);
+             throw new Error('Failed to parse blueprint from AI response.');
+        }
+        
+        const blueprint = JSON.parse(blueprintText);
+
         const emailHtml = formatBlueprintEmail(blueprint);
         
         const msg = {
             to: email,
             from: SENDER_EMAIL,
-            subject: `Your Custom Kortex AI Blueprint for ${company}`, // Personalized subject
+            subject: `Your Custom Kortex AI Blueprint for ${company}`,
             html: emailHtml,
         };
 
         await sgMail.send(msg);
 
-        // --- Step 3: Return Success Response ---
         return res.status(200).json({ success: true, message: 'Blueprint sent successfully!' });
 
     } catch (error) {
-        console.error('Error in serverless function:', error);
+        console.error('Error in serverless function:', error.message);
         return res.status(500).json({ success: false, message: 'An internal error occurred.' });
     }
 }
