@@ -75,14 +75,17 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { email, industry, goal, challenge } = req.body;
+        // **FIX 1: Changed `goal` to `company` to match the frontend form data.**
+        const { email, company, industry, challenge } = req.body;
 
-        if (!email || !industry || !goal || !challenge) {
-            return res.status(400).json({ message: 'Missing required fields.' });
+        // The validation now correctly checks for `company`.
+        if (!email || !company || !industry || !challenge) {
+            // Updated the error message to be more specific.
+            return res.status(400).json({ message: 'Missing required fields. All fields are mandatory.' });
         }
 
-        // --- Step 1: Generate Blueprint with Gemini API ---
-        const prompt = `You are a visionary AI strategist for Kortex Labs. A potential client in the ${industry} industry wants to ${goal}. Their primary challenge is: '${challenge}'. Generate a high-level, 3-step 'AI Blueprint' following the Kortex Labs methodology: 1. Ingest & Unify, 2. Analyze & Predict, 3. Execute & Automate. For each step, provide a concise description and suggest a specific type of Kortex AI Agent. Finally, provide a compelling summary. Your response MUST be in the specified JSON format.`;
+        // **FIX 2: Updated the prompt to use the `company` and `challenge` variables correctly.**
+        const prompt = `You are a visionary AI strategist for Kortex Labs. A potential client, ${company}, which is in the ${industry} industry, has submitted a request. Their primary operational challenge is: '${challenge}'. Generate a high-level, 3-step 'AI Blueprint' to solve this challenge using the Kortex Labs methodology: 1. Ingest & Unify, 2. Analyze & Predict, 3. Execute & Automate. For each step, provide a concise description and suggest a specific type of Kortex AI Agent that would be used. Finally, provide a compelling summary of the potential impact for ${company}. Your response MUST be in the specified JSON format.`;
 
         const payload = {
             contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -120,7 +123,7 @@ export default async function handler(req, res) {
         const msg = {
             to: email,
             from: SENDER_EMAIL,
-            subject: 'Your Custom Kortex AI Blueprint is Here.',
+            subject: `Your Custom Kortex AI Blueprint for ${company}`, // Personalized subject
             html: emailHtml,
         };
 
