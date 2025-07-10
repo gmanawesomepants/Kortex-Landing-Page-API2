@@ -96,7 +96,6 @@ export default async function handler(req, res) {
             }
         };
 
-        // --- THE ONLY CHANGE IS ON THIS LINE ---
         const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`;
         
         const geminiResponse = await fetch(geminiUrl, {
@@ -123,14 +122,25 @@ export default async function handler(req, res) {
 
         const emailHtml = formatBlueprintEmail(blueprint);
         
-        const msg = {
-            to: email,
-            from: SENDER_EMAIL,
+        // --- EMAIL 1: SEND THE BLUEPRINT TO THE CUSTOMER ---
+        const customerMsg = {
+            to: email, // The email address from the form
+            from: SENDER_EMAIL, // info@kortexlabs.ai
             subject: `Your Custom Kortex AI Blueprint for ${company}`,
             html: emailHtml,
         };
+        
+        // --- EMAIL 2: SEND A NOTIFICATION TO YOURSELF ---
+        const notificationMsg = {
+            to: 'info@kortexlabs.ai', // Your internal email
+            from: SENDER_EMAIL, // You can send from the same address
+            subject: `New Blueprint Lead: ${company}`,
+            text: `A new blueprint was generated for:\n\nCompany: ${company}\nIndustry: ${industry}\nEmail: ${email}\nChallenge: ${challenge}`
+        };
 
-        await sgMail.send(msg);
+        // --- SEND BOTH EMAILS ---
+        await sgMail.send(customerMsg);
+        await sgMail.send(notificationMsg);
 
         return res.status(200).json({ success: true, message: 'Blueprint sent successfully!' });
 
