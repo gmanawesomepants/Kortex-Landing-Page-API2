@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kortex Labs - Join the Waitlist</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js has been removed as it's no longer needed for the form -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
@@ -244,7 +243,7 @@
     </script>
 
     <script>
-        // --- NEW Script for handling form submission with vanilla JavaScript ---
+        // --- Final, Corrected Script for handling form submission ---
         document.addEventListener('DOMContentLoaded', () => {
             // Get references to the form and its elements
             const waitlistForm = document.getElementById('waitlist-form');
@@ -274,7 +273,6 @@
 
                     try {
                         // --- API Call: Send data to the backend ---
-                        // The endpoint has been corrected from '/api/join-waitlist'
                         const response = await fetch('/api/generate-blueprint', {
                             method: 'POST',
                             headers: {
