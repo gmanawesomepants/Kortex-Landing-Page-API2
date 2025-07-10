@@ -274,9 +274,8 @@
 
                     try {
                         // --- API Call: Send data to the backend ---
-                        // This is where you would call your Vercel function.
-                        // Replace '/api/join-waitlist' with your actual API endpoint.
-                        const response = await fetch('/api/join-waitlist', {
+                        // The endpoint has been corrected from '/api/join-waitlist'
+                        const response = await fetch('/api/generate-blueprint', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
