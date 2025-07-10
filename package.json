@@ -1,0 +1,10 @@
+{
+  "name": "kortex-funnel-backend",
+  "version": "1.0.0",
+  "description": "Backend for Kortex AI Blueprint funnel",
+  "main": "api/generate-blueprint.js",
+  "dependencies": {
+    "node-fetch": "^2.6.7",
+    "@sendgrid/mail": "^8.1.0"
+  }
+}
