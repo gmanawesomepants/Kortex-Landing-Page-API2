@@ -19,7 +19,7 @@ function formatBlueprintEmail(blueprint) {
     const stepsHtml = steps.map(step => `
         <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #3c2a4d;">
             <h3 style="margin: 0 0 8px 0; color: #e49dfe; font-size: 18px; font-family: 'Montserrat', sans-serif;">
-                Step ${step.step_number}: ${step.step_title}
+                ${step.step_title}
             </h3>
             <p style="margin: 0 0 12px 0; color: #E2E8F0; font-size: 16px; line-height: 1.6;">
                 ${step.description}
@@ -79,24 +79,21 @@ export default async function handler(req, res) {
             return res.status(400).json({ message: 'Missing required fields. All fields are mandatory.' });
         }
         
-        // --- UPDATED PROMPT FOR CONSISTENCY ---
-        const prompt = `You are a visionary AI strategist for Kortex Labs.
-A potential client, ${company}, from the ${industry} industry, has the following challenge: '${challenge}'.
+        const prompt = `You are an AI strategist generating a JSON blueprint for a Kortex Labs client.
+Client: ${company} (${industry})
+Challenge: ${challenge}
 
-Your task is to generate a 3-step 'AI Blueprint' in JSON format according to the provided schema. Follow these instructions precisely:
-1.  **blueprint_title**: Create a compelling title for the blueprint that addresses the client's challenge.
-2.  **steps**: Generate an array with exactly three objects, one for each step of the Kortex methodology.
-    * **step_number**: Use 1, 2, and 3 respectively.
-    * **step_title**: Use the exact titles: "Step 1: Ingest & Unify", "Step 2: Analyze & Predict", and "Step 3: Execute & Automate".
-    * **description**: Write a concise, one or two-sentence description for each step, tailored to the client's specific challenge.
-    * **kortex_agent_suggestion**: Suggest a relevant type of Kortex AI Agent for each step.
-3.  **summary**: Write a compelling, one or two-sentence summary of the blueprint's potential impact for ${company}.
+Your response must be a JSON object matching the provided schema. Follow these rules:
+- The 'blueprint_title' must be a compelling title for the blueprint.
+- The 'steps' array must contain exactly three objects for the Kortex methodology.
+- Each 'step_title' must be one of: "Step 1: Ingest & Unify", "Step 2: Analyze & Predict", or "Step 3: Execute & Automate".
+- The 'description' and 'kortex_agent_suggestion' for each step must be concise and tailored to the client's challenge.
+- The 'summary' must be a compelling overview of the potential impact.
 `;
 
         const payload = {
             contents: [{ role: 'user', parts: [{ text: prompt }] }],
             generationConfig: {
-                // --- ADDED TEMPERATURE FOR CONSISTENCY ---
                 temperature: 0.2,
                 responseMimeType: 'application/json',
                 responseSchema: {
