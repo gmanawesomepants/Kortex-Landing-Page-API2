@@ -78,12 +78,26 @@ export default async function handler(req, res) {
         if (!email || !company || !industry || !challenge) {
             return res.status(400).json({ message: 'Missing required fields. All fields are mandatory.' });
         }
+        
+        // --- UPDATED PROMPT FOR CONSISTENCY ---
+        const prompt = `You are a visionary AI strategist for Kortex Labs.
+A potential client, ${company}, from the ${industry} industry, has the following challenge: '${challenge}'.
 
-        const prompt = `You are a visionary AI strategist for Kortex Labs. A potential client, ${company}, which is in the ${industry} industry, has submitted a request. Their primary operational challenge is: '${challenge}'. Generate a high-level, 3-step 'AI Blueprint' to solve this challenge using the Kortex Labs methodology: 1. Ingest & Unify, 2. Analyze & Predict, 3. Execute & Automate. For each step, provide a concise description and suggest a specific type of Kortex AI Agent that would be used. Finally, provide a compelling summary of the potential impact for ${company}. Your response MUST be in the specified JSON format.`;
+Your task is to generate a 3-step 'AI Blueprint' in JSON format according to the provided schema. Follow these instructions precisely:
+1.  **blueprint_title**: Create a compelling title for the blueprint that addresses the client's challenge.
+2.  **steps**: Generate an array with exactly three objects, one for each step of the Kortex methodology.
+    * **step_number**: Use 1, 2, and 3 respectively.
+    * **step_title**: Use the exact titles: "Step 1: Ingest & Unify", "Step 2: Analyze & Predict", and "Step 3: Execute & Automate".
+    * **description**: Write a concise, one or two-sentence description for each step, tailored to the client's specific challenge.
+    * **kortex_agent_suggestion**: Suggest a relevant type of Kortex AI Agent for each step.
+3.  **summary**: Write a compelling, one or two-sentence summary of the blueprint's potential impact for ${company}.
+`;
 
         const payload = {
             contents: [{ role: 'user', parts: [{ text: prompt }] }],
             generationConfig: {
+                // --- ADDED TEMPERATURE FOR CONSISTENCY ---
+                temperature: 0.2,
                 responseMimeType: 'application/json',
                 responseSchema: {
                     type: 'OBJECT',
@@ -122,23 +136,20 @@ export default async function handler(req, res) {
 
         const emailHtml = formatBlueprintEmail(blueprint);
         
-        // --- EMAIL 1: SEND THE BLUEPRINT TO THE CUSTOMER ---
         const customerMsg = {
-            to: email, // The email address from the form
-            from: SENDER_EMAIL, // info@kortexlabs.ai
+            to: email,
+            from: SENDER_EMAIL,
             subject: `Your Custom Kortex AI Blueprint for ${company}`,
             html: emailHtml,
         };
         
-        // --- EMAIL 2: SEND A NOTIFICATION TO YOURSELF ---
         const notificationMsg = {
-            to: 'info@kortexlabs.ai', // Your internal email
-            from: SENDER_EMAIL, // You can send from the same address
+            to: 'info@kortexlabs.ai',
+            from: SENDER_EMAIL,
             subject: `New Blueprint Lead: ${company}`,
             text: `A new blueprint was generated for:\n\nCompany: ${company}\nIndustry: ${industry}\nEmail: ${email}\nChallenge: ${challenge}`
         };
 
-        // --- SEND BOTH EMAILS ---
         await sgMail.send(customerMsg);
         await sgMail.send(notificationMsg);
 
